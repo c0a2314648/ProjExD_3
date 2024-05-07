@@ -140,6 +140,27 @@ class Beam:
             screen.blit(self.img, self.rct)
 
 
+class Score:
+    """
+    スコアを表示するためのクラス
+    """
+    def __init__(self):
+        """
+        文字列の初期設定
+        """
+        self.fonto = pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体", 30)
+        self.col = (0, 0, 255)
+        self.so = 0
+        self.img = self.fonto.render(f"スコア：{self.so}", 0, self.col)
+
+    def update(self, screen: pg.Surface):
+        """
+        文字列の表示
+        """
+        self.img = self.fonto.render(f"スコア：{self.so}", 0, self.col)
+        screen.blit(self.img, [100, HEIGHT-50])
+
+
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
@@ -148,6 +169,7 @@ def main():
     #bomb = Bomb((255, 0, 0), 10)
     bombs = [Bomb((255, 0, 0), 10) for i in range(NUM_OF_BOMBS)]
     beams = []  # ビームを複数扱うためのリスト
+    score = Score()
     clock = pg.time.Clock()
     tmr = 0
     while True:
@@ -178,13 +200,14 @@ def main():
         #if bomb is not None and beam is not None:
         for i, bomb in enumerate(bombs):
             for j, beam in enumerate(beams):
-                if beam.rct.colliderect(bomb.rct):  #複数のビームと爆弾の衝突判定
+                if beam.rct.colliderect(bomb.rct):  #　複数のビームと爆弾の衝突判定
                     beams[j] = None
                     bombs[i] = None
                     bird.change_img(6,screen)
+                    score.so += 1  # 爆弾とビームが衝突時スコアが加点される
                     pg.display.update()
-            bombs = [bomb for bomb in bombs if bomb is not None]
-            beams = [beam for beam in beams if beam is not None]  #衝突した爆弾とビームをリストから削除
+            beams = [beam for beam in beams if beam is not None]  #　衝突した爆弾とビームをリストから削除
+        bombs = [bomb for bomb in bombs if bomb is not None]
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
@@ -192,6 +215,7 @@ def main():
             bomb.update(screen)
         for beam in beams:
             beam.update(screen)
+        score.update(screen)  # スコアの描画
         pg.display.update()
         tmr += 1
         clock.tick(50)
