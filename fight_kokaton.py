@@ -196,7 +196,8 @@ def main():
                 screen.blit(txt, [WIDTH/2-150, HEIGHT/2])
                 pg.display.update()
                 time.sleep(5)
-                return        
+                return     
+               
         #if bomb is not None and beam is not None:
         for i, bomb in enumerate(bombs):
             for j, beam in enumerate(beams):
