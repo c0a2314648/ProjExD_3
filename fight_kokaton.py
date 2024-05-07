@@ -158,7 +158,7 @@ def main():
                 beams.append(Beam(bird))  # ビームの数だけリストに追加
         screen.blit(bg_img, [0, 0])
 
-        for i, beam in enumerate(beams):
+        for i, beam in enumerate(beams):  # 画面外から出たビームをリストから削除
             yoko, tate = check_bound(beam.rct)
             if not yoko:
                 del beams[i]
@@ -178,13 +178,13 @@ def main():
         #if bomb is not None and beam is not None:
         for i, bomb in enumerate(bombs):
             for j, beam in enumerate(beams):
-                if beam.rct.colliderect(bomb.rct):  #ビームと爆弾の衝突判定
+                if beam.rct.colliderect(bomb.rct):  #複数のビームと爆弾の衝突判定
                     beams[j] = None
                     bombs[i] = None
                     bird.change_img(6,screen)
                     pg.display.update()
             bombs = [bomb for bomb in bombs if bomb is not None]
-            beams = [beam for beam in beams if beam is not None]
+            beams = [beam for beam in beams if beam is not None]  #衝突した爆弾とビームをリストから削除
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
